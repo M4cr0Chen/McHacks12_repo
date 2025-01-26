@@ -44,20 +44,30 @@ function App() {
 
       eventSourceRef.current.onmessage = (event) => {
         console.log("SSE Message Received:", event.data);
-
+    
         try {
-          const data = JSON.parse(event.data);
-
-          if (data.type === "transcript") {
-            setTranscript((prev) => prev + data.text + '\n');
-          } else if (data.type === "summary") {
-            console.log("Updating summary in UI:", data.text);
-            setSummary(data.text);
-          }
+            const data = JSON.parse(event.data);
+    
+            if (data.type === "transcript") {
+                setTranscript((prev) => {
+                    // Split text into words and prevent duplicates
+                    const prevWords = prev.split(" ");
+                    const newWords = data.text.split(" ");
+                    
+                    if (prevWords.slice(-newWords.length).join(" ") !== newWords.join(" ")) {
+                        return prev + " " + data.text;
+                    }
+                    return prev;
+                });
+            } else if (data.type === "summary") {
+                console.log("Updating summary in UI:", data.text);
+                setSummary(data.text);
+            }
         } catch (error) {
-          console.error("Error parsing SSE message:", error);
+            console.error("Error parsing SSE message:", error);
         }
-      };
+    };
+    
     } catch (error) {
       console.error('Error starting:', error);
     }
@@ -68,15 +78,18 @@ function App() {
 
     const response = await fetch(`${BASE_URL}/stop`);
     if (response.ok) {
-      setRecording(false);
-      if (eventSourceRef.current) {
-        eventSourceRef.current.close();
-        eventSourceRef.current = null;
-      }
+        const result = await response.json();
+        setRecording(false);
+        if (eventSourceRef.current) {
+            eventSourceRef.current.close();
+            eventSourceRef.current = null;
+        }
+        setSummary(result.summary); // Update summary in UI
     } else {
-      console.error('Stop failed:', await response.text());
+        console.error('Stop failed:', await response.text());
     }
-  };
+};
+
 
   const handleUpload = async (event) => {
     const file = event.target.files[0];

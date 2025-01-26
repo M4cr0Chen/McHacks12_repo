@@ -32,11 +32,15 @@ let sseClients = [];
 
 // Function to broadcast live transcription to SSE clients
 function broadcastTranscript(text) {
-    transcriptBuffer.push(text);
-    sseClients.forEach((res) => {
-        res.write(`data: ${JSON.stringify({ type: "transcript", text })}\n\n`);
-    });
+    if (transcriptBuffer.length === 0 || transcriptBuffer[transcriptBuffer.length - 1] !== text) {
+        transcriptBuffer.push(text);
+        sseClients.forEach((res) => {
+            res.write(`data: ${JSON.stringify({ type: "transcript", text })}\n\n`);
+        });
+    }
 }
+
+
 
 // Function to transcribe uploaded audio files
 async function transcribeAudio(filePath) {
@@ -68,7 +72,7 @@ async function transcribeAudio(filePath) {
 async function summarizeText(text) {
     try {
         const response = await openai.chat.completions.create({
-            model: "gpt-4",
+            model: "gpt-3.5-turbo",
             messages: [
                 { 
                     role: "system", 
@@ -179,14 +183,14 @@ app.get('/start', (req, res) => {
     };
 
     recognizeStream = speechClient
-        .streamingRecognize(request)
-        .on('error', (err) => console.error('Speech API error:', err))
-        .on('data', (data) => {
-            if (data.results?.[0]?.alternatives?.[0]) {
-                const transcript = data.results[0].alternatives[0].transcript;
-                broadcastTranscript(transcript);
-            }
-        });
+    .streamingRecognize(request)
+    .on('data', (data) => {
+        if (data.results?.[0]?.isFinal) {
+            const transcript = data.results[0].alternatives[0].transcript;
+            broadcastTranscript(transcript);
+        }
+    });
+
 
     recorder
         .record({ sampleRateHertz: 16000, threshold: 0, silence: '1.0', keepSilence: true })
@@ -209,10 +213,11 @@ app.get('/stop', async (req, res) => {
         recognizeStream = null;
     }
 
-    await summarizeText(transcriptBuffer.join(" "));
+    summary = await summarizeText(transcriptBuffer.join(" ")); // Store summary
 
-    res.send('Recording stopped');
+    res.send({ message: 'Recording stopped', summary }); // Return summary
 });
+
 
 // Start server
 app.listen(port, () => {
