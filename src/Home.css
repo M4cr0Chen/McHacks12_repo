@@ -13,11 +13,15 @@
 
 .button {
   font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
-  @apply hover:text-zinc-50
 }
 
 input[type="file"] {
   display: none;
+}
+
+.startButton:hover{
+  background-color: black;
+  color: white;
 }
 
 
