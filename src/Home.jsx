@@ -18,10 +18,10 @@ const VisuallyHiddenInput = styled('input')({
 
 function Home() {
   const [transcript, setTranscript] = useState('');
-  const [uploadedTranscript, setUploadedTranscript] = useState('testonly');
+  const [uploadedTranscript, setUploadedTranscript] = useState('');
   const [summary, setSummary] = useState('');
   const [recording, setRecording] = useState(false);
-  const [showTranscript, setShowTranscript] = useState(true);
+  const [showTranscript, setShowTranscript] = useState(false);
   const eventSourceRef = useRef(null);
   const [isRecording, setIsRecording] = useState(false);
 
