@@ -79,8 +79,6 @@ async function summarizeText(text) {
                     content: `You are an AI assistant summarizing meeting transcripts.
                     Provide the summary in **structured Markdown format** with the following structure:
                     
-                    ## 📌 Meeting Summary
-                    
                     ### ✅ Action Points
                     - **Task:** [Describe the task]  
                       - **Assigned to:** [Person responsible]  
