@@ -23,8 +23,18 @@ function App() {
   const [recording, setRecording] = useState(false);
   const [showTranscript, setShowTranscript] = useState(true);
   const eventSourceRef = useRef(null);
+  const [isRecording, setIsRecording] = useState(false);
 
   const BASE_URL = 'http://localhost:3000';
+
+
+  const handleMultipleFunc = () => {
+    handleStart();
+    handleToggleRecording();
+  }
+  const handleToggleRecording = () => {
+    setIsRecording(!isRecording);
+  };
 
   const handleStart = async () => {
     if (recording) return;
@@ -44,30 +54,30 @@ function App() {
 
       eventSourceRef.current.onmessage = (event) => {
         console.log("SSE Message Received:", event.data);
-    
+
         try {
-            const data = JSON.parse(event.data);
-    
-            if (data.type === "transcript") {
-                setTranscript((prev) => {
-                    // Split text into words and prevent duplicates
-                    const prevWords = prev.split(" ");
-                    const newWords = data.text.split(" ");
-                    
-                    if (prevWords.slice(-newWords.length).join(" ") !== newWords.join(" ")) {
-                        return prev + " " + data.text;
-                    }
-                    return prev;
-                });
-            } else if (data.type === "summary") {
-                console.log("Updating summary in UI:", data.text);
-                setSummary(data.text);
-            }
+          const data = JSON.parse(event.data);
+
+          if (data.type === "transcript") {
+            setTranscript((prev) => {
+              // Split text into words and prevent duplicates
+              const prevWords = prev.split(" ");
+              const newWords = data.text.split(" ");
+
+              if (prevWords.slice(-newWords.length).join(" ") !== newWords.join(" ")) {
+                return prev + " " + data.text;
+              }
+              return prev;
+            });
+          } else if (data.type === "summary") {
+            console.log("Updating summary in UI:", data.text);
+            setSummary(data.text);
+          }
         } catch (error) {
-            console.error("Error parsing SSE message:", error);
+          console.error("Error parsing SSE message:", error);
         }
-    };
-    
+      };
+
     } catch (error) {
       console.error('Error starting:', error);
     }
@@ -78,17 +88,17 @@ function App() {
 
     const response = await fetch(`${BASE_URL}/stop`);
     if (response.ok) {
-        const result = await response.json();
-        setRecording(false);
-        if (eventSourceRef.current) {
-            eventSourceRef.current.close();
-            eventSourceRef.current = null;
-        }
-        setSummary(result.summary); // Update summary in UI
+      const result = await response.json();
+      setRecording(false);
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+        eventSourceRef.current = null;
+      }
+      setSummary(result.summary); // Update summary in UI
     } else {
-        console.error('Stop failed:', await response.text());
+      console.error('Stop failed:', await response.text());
     }
-};
+  };
 
 
   const handleUpload = async (event) => {
@@ -134,31 +144,63 @@ function App() {
       </div>
 
       <div style={{ marginBottom: 10 }}>
-        <button onClick={handleStart} disabled={recording} style={{
-          backgroundColor: 'white',
-          color: 'black',
-          margin: 30,
-          marginBottom: 5,
-          padding: 10,
-          paddingTop: 15,
-          paddingBottom: 15,
-          fontSize: 16,
-          marginLeft: 20,
-          border: 'none',
-          cursor: 'pointer',
-          borderRadius: 20,
-          fontFamily: 'Consolas',
-          textAlign: 'center',
-          display: 'flex',
-        }}>
-          <img src="src/assets/play.svg" alt="play" style={{ width: 30, height: 30, marginLeft: 20, marginBottom: 0 }} />
-          <div style={{
-            marginTop: 5,
+        {isRecording
+          ?
+          <button onClick={handleMultipleFunc} disabled={recording} style={{
+            backgroundColor: 'black',
+            color: 'white',
+            margin: 30,
+            marginBottom: 5,
+            padding: 10,
+            paddingTop: 15,
+            paddingBottom: 15,
+            fontSize: 16,
             marginLeft: 20,
-            marginRight: 20,
+            border: 'none',
+            cursor: 'pointer',
+            borderRadius: 20,
+            fontFamily: 'Consolas',
+            textAlign: 'center',
+            display: 'flex',
           }}>
-            Press the play button to start recording.
-          </div></button>
+            <img src="src/assets/resume.svg" alt="play" style={{ width: 30, height: 30, marginLeft: 20, marginBottom: 0 }} />
+
+            <div style={{
+              marginTop: 5,
+              marginLeft: 20,
+              marginRight: 20,
+            }}>
+              Press this again to stop recording.
+            </div></button>
+          :
+
+          <button onClick={handleMultipleFunc} disabled={recording} style={{
+            backgroundColor: 'white',
+            color: 'black',
+            margin: 30,
+            marginBottom: 5,
+            padding: 10,
+            paddingTop: 15,
+            paddingBottom: 15,
+            fontSize: 16,
+            marginLeft: 20,
+            border: 'none',
+            cursor: 'pointer',
+            borderRadius: 20,
+            fontFamily: 'Consolas',
+            textAlign: 'center',
+            display: 'flex',
+          }}>
+            <img src="src/assets/play.svg" alt="play" style={{ width: 30, height: 30, marginLeft: 20, marginBottom: 0 }} />
+
+            <div style={{
+              marginTop: 5,
+              marginLeft: 20,
+              marginRight: 20,
+            }}>
+              Press the play button to start recording.
+            </div></button>
+        }
       </div>
 
       {/* <div>
