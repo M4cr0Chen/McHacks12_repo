@@ -181,7 +181,7 @@ function App() {
           </div></button>
 
 
-        <button onClick={handleStop} disabled={recording} style={{
+        <button onClick={handleStop} disabled={!recording} style={{
           backgroundColor: 'black',
           color: 'white',
           margin: 30,
