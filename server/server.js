@@ -32,14 +32,14 @@ let sseClients = [];
 
 // Function to broadcast live transcription to SSE clients
 function broadcastTranscript(text) {
-    if (transcriptBuffer.length > 0 && transcriptBuffer[transcriptBuffer.length - 1] === text) {
-        return; // Avoid sending duplicate text
+    if (transcriptBuffer.length === 0 || transcriptBuffer[transcriptBuffer.length - 1] !== text) {
+        transcriptBuffer.push(text);
+        sseClients.forEach((res) => {
+            res.write(`data: ${JSON.stringify({ type: "transcript", text })}\n\n`);
+        });
     }
-    transcriptBuffer.push(text);
-    sseClients.forEach((res) => {
-        res.write(`data: ${JSON.stringify({ type: "transcript", text })}\n\n`);
-    });
 }
+
 
 
 // Function to transcribe uploaded audio files
@@ -183,14 +183,14 @@ app.get('/start', (req, res) => {
     };
 
     recognizeStream = speechClient
-        .streamingRecognize(request)
-        .on('error', (err) => console.error('Speech API error:', err))
-        .on('data', (data) => {
-            if (data.results?.[0]?.alternatives?.[0]) {
-                const transcript = data.results[0].alternatives[0].transcript;
-                broadcastTranscript(transcript);
-            }
-        });
+    .streamingRecognize(request)
+    .on('data', (data) => {
+        if (data.results?.[0]?.isFinal) {
+            const transcript = data.results[0].alternatives[0].transcript;
+            broadcastTranscript(transcript);
+        }
+    });
+
 
     recorder
         .record({ sampleRateHertz: 16000, threshold: 0, silence: '1.0', keepSilence: true })
