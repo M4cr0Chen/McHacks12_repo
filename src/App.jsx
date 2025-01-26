@@ -148,64 +148,65 @@ function App() {
         {/* <h1>Real-Time Meeting Transcription & Summary</h1> */}
       </div>
 
-      <div style={{ marginBottom: 10 }}>
-        {isRecording
-          ?
-          <button onClick={handleStopRecordingMultipleFunc} disabled={recording} style={{
-            backgroundColor: 'black',
-            color: 'white',
-            margin: 30,
-            marginBottom: 5,
-            padding: 10,
-            paddingTop: 15,
-            paddingBottom: 15,
-            fontSize: 16,
+
+
+      <div style={{ marginBottom: 10, display: 'flex' }}>
+
+
+        <button onClick={handleStart} disabled={recording} style={{
+          backgroundColor: 'white',
+          color: 'black',
+          margin: 30,
+          marginBottom: 5,
+          padding: 10,
+          paddingTop: 15,
+          paddingBottom: 15,
+          fontSize: 16,
+          marginLeft: 20,
+          border: 'none',
+          cursor: 'pointer',
+          borderRadius: 20,
+          fontFamily: 'Consolas',
+          textAlign: 'center',
+          display: 'flex',
+        }}>
+          <img src="src/assets/play.svg" alt="play" style={{ width: 30, height: 30, marginLeft: 20, marginBottom: 0 }} />
+
+          <div style={{
+            marginTop: 5,
             marginLeft: 20,
-            border: 'none',
-            cursor: 'pointer',
-            borderRadius: 20,
-            fontFamily: 'Consolas',
-            textAlign: 'center',
-            display: 'flex',
+            marginRight: 20,
           }}>
-            <img src="src/assets/resume.svg" alt="play" style={{ width: 30, height: 30, marginLeft: 20, marginBottom: 0 }} />
+            Start
+          </div></button>
 
-            <div style={{
-              marginTop: 5,
-              marginLeft: 20,
-              marginRight: 20,
-            }}>
-              Press this again to stop recording.
-            </div></button>
-          :
 
-          <button onClick={handleStartRecordingMultipleFunc} disabled={recording} style={{
-            backgroundColor: 'white',
-            color: 'black',
-            margin: 30,
-            marginBottom: 5,
-            padding: 10,
-            paddingTop: 15,
-            paddingBottom: 15,
-            fontSize: 16,
+        <button onClick={handleStop} disabled={recording} style={{
+          backgroundColor: 'black',
+          color: 'white',
+          margin: 30,
+          marginBottom: 5,
+          padding: 10,
+          paddingTop: 15,
+          paddingBottom: 15,
+          fontSize: 16,
+          marginLeft: 20,
+          border: 'none',
+          cursor: 'pointer',
+          borderRadius: 20,
+          fontFamily: 'Consolas',
+          textAlign: 'center',
+          display: 'flex',
+        }}>
+          <img src="src/assets/resume.svg" alt="play" style={{ width: 30, height: 30, marginLeft: 20, marginBottom: 0 }} />
+
+          <div style={{
+            marginTop: 5,
             marginLeft: 20,
-            border: 'none',
-            cursor: 'pointer',
-            borderRadius: 20,
-            fontFamily: 'Consolas',
-            textAlign: 'center',
-            display: 'flex',
+            marginRight: 20,
           }}>
-            <img src="src/assets/play.svg" alt="play" style={{ width: 30, height: 30, marginLeft: 20, marginBottom: 0 }} />
-
-            <div style={{
-              marginTop: 5,
-              marginLeft: 20,
-              marginRight: 20,
-            }}>
-              Press the play button to start recording.
-            </div></button>
-        }
+            Stop
+          </div></button>
       </div>
 
       {/* <div>

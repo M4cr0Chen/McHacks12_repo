@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -9,11 +13,13 @@
 
 .button {
   font-family:Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New;
+  @apply hover:text-zinc-50
 }
 
 input[type="file"] {
   display: none;
 }
+
 
 input::file-selector-button {
   font-weight: bold;
