@@ -41,35 +41,78 @@ const WebSocketComponent = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold">🔴 Live Meeting Summary</h1>
-      
-      <div className="mt-4 flex gap-2">
-        <button
-          onClick={startRecording}
-          disabled={recording}
-          className="bg-green-500 text-white px-4 py-2 rounded"
-        >
-          🎤 Start Recording
-        </button>
-        <button
-          onClick={stopRecording}
-          disabled={!recording}
-          className="bg-red-500 text-white px-4 py-2 rounded"
-        >
-          ⏹ Stop Recording
-        </button>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6 md:p-8">
+  <div className="mx-auto max-w-3xl space-y-8">
+    {/* 标题部分 */}
+    <header className="flex items-center justify-between">
+      <h1 className="text-3xl font-bold text-gray-800">
+        <span className="mr-2 animate-pulse text-red-500">🔴</span>
+        Live Meeting Summary
+      </h1>
+      <span className="rounded-lg bg-white px-3 py-1 text-sm font-medium text-gray-600 shadow-sm">
+        Beta
+      </span>
+    </header>
 
-      <div className="mt-4 p-4 bg-white shadow-md rounded-md">
-        <h2 className="text-lg font-semibold">Live Transcript:</h2>
-        <p className="text-gray-700">{transcript}</p>
-      </div>
-      <div className="mt-4 p-4 bg-blue-100 shadow-md rounded-md">
-        <h2 className="text-lg font-semibold">AI Summary:</h2>
-        <p className="text-gray-900">{summary}</p>
-      </div>
+    {/* 控制按钮组 */}
+    <div className="flex flex-wrap gap-3 sm:gap-4">
+      <button
+        onClick={startRecording}
+        disabled={recording}
+        className="flex items-center rounded-lg bg-green-500 px-5 py-3 text-sm font-medium text-white transition-all 
+                 hover:bg-green-600 focus:ring-2 focus:ring-green-400 focus:ring-offset-2
+                 disabled:opacity-50 disabled:hover:bg-green-500 sm:text-base"
+      >
+        <span className="mr-2">🎤</span>
+        Start Recording
+      </button>
+      <button
+        onClick={stopRecording}
+        disabled={!recording}
+        className="flex items-center rounded-lg bg-red-500 px-5 py-3 text-sm font-medium text-white transition-all
+                 hover:bg-red-600 focus:ring-2 focus:ring-red-400 focus:ring-offset-2
+                 disabled:opacity-50 disabled:hover:bg-red-500 sm:text-base"
+      >
+        <span className="mr-2">⏹</span>
+        Stop Recording
+      </button>
     </div>
+
+    {/* 实时转录面板 */}
+    <section className="overflow-hidden rounded-xl bg-white shadow-lg">
+      <div className="border-b border-gray-100 bg-gray-50 px-6 py-4">
+        <h2 className="flex items-center text-lg font-semibold text-gray-700">
+          <span className="mr-2 text-blue-500">📝</span>
+          Live Transcript
+        </h2>
+      </div>
+      <div className="px-6 py-4">
+        <p className="text-gray-700 leading-relaxed">
+          {transcript || (
+            <span className="text-gray-400">Waiting for speech input...</span>
+          )}
+        </p>
+      </div>
+    </section>
+
+    {/* AI摘要面板 */}
+    <section className="overflow-hidden rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg">
+      <div className="border-b border-blue-100 bg-white/50 px-6 py-4">
+        <h2 className="flex items-center text-lg font-semibold text-gray-700">
+          <span className="mr-2 text-indigo-500">🤖</span>
+          AI Summary
+        </h2>
+      </div>
+      <div className="px-6 py-4">
+        <p className="text-gray-800 leading-relaxed">
+          {summary || (
+            <span className="text-gray-400">Summary will appear here...</span>
+          )}
+        </p>
+      </div>
+    </section>
+  </div>
+</div>
   );
 };
 
