@@ -28,8 +28,13 @@ function App() {
   const BASE_URL = 'http://localhost:3000';
 
 
-  const handleMultipleFunc = () => {
+  const handleStartRecordingMultipleFunc = () => {
     handleStart();
+    handleToggleRecording();
+  }
+
+  const handleStopRecordingMultipleFunc = () => {
+    handleStop();
     handleToggleRecording();
   }
   const handleToggleRecording = () => {
@@ -146,7 +151,7 @@ function App() {
       <div style={{ marginBottom: 10 }}>
         {isRecording
           ?
-          <button onClick={handleMultipleFunc} disabled={recording} style={{
+          <button onClick={handleStopRecordingMultipleFunc} disabled={recording} style={{
             backgroundColor: 'black',
             color: 'white',
             margin: 30,
@@ -174,7 +179,7 @@ function App() {
             </div></button>
           :
 
-          <button onClick={handleMultipleFunc} disabled={recording} style={{
+          <button onClick={handleStartRecordingMultipleFunc} disabled={recording} style={{
             backgroundColor: 'white',
             color: 'black',
             margin: 30,
